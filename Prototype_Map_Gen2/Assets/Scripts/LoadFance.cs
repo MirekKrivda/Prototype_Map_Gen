@@ -6,12 +6,12 @@ public class LoadFance : MonoBehaviour
 {
 
     [SerializeField] 
-    private new GameObject[] HorizontalFenceGoPos;
+    private GameObject[] HorizontalFenceGoPos;
     [SerializeField] 
-    private new GameObject[] VerticalFenceGoPos;
+    private GameObject[] VerticalFenceGoPos;
 
-    [SerializeField] private new GameObject[] HorizontalFencePrefabs;
-    [SerializeField] private new GameObject[] VerticalFencePrefabs;
+    [SerializeField] private GameObject[] HorizontalFencePrefabs;
+    [SerializeField] private GameObject[] VerticalFencePrefabs;
 
 
     private void Awake()
@@ -31,7 +31,8 @@ public class LoadFance : MonoBehaviour
         {
             if (Random.Range(0, 2) == 1)
             {
-               Instantiate(HorizontalFencePrefabs[Random.Range(0, HorizontalFencePrefabs.Length)], HorizontalFenceGoPos[i].transform.position, Quaternion.identity); 
+               Instantiate(HorizontalFencePrefabs[Random.Range(0, HorizontalFencePrefabs.Length)], HorizontalFenceGoPos[i].transform.position, Quaternion.identity);
+               
             }
         }
     }
