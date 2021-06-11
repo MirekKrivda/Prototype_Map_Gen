@@ -7,7 +7,11 @@ using UnityEngine;
 public class MapGenHandler : MonoBehaviour
 {
     [SerializeField]
+    private GameObject[] fieldsPosObj;
+    [SerializeField]
     private FieldPos[] fieldsPos;
+    [SerializeField]
+    private GameObject fieldPF;
 
     private int[][] fieldsArray;
 
@@ -16,18 +20,7 @@ public class MapGenHandler : MonoBehaviour
         DefineFieldArray();
         CreateMapLayout();
         AssigneFieldType();
-    }
-
-    
-
-    private void Awake()
-    {
-        
-    }
-
-    void Update()
-    {
-        
+        LoadPrefabs();
     }
 
     private void DefineFieldArray()
@@ -96,16 +89,35 @@ public class MapGenHandler : MonoBehaviour
         rand = Random.Range(2, 5);
         fieldsArray[1][rand] = 9;
         fieldsArray[0][rand] = 13;
+        int yPosLeftStart = rand;
         
         // Sets Random Right Exit Pos & Outside Exit Right
         rand = Random.Range(2, 5);
         fieldsArray[5][rand] = 10;
         fieldsArray[6][rand] = 14;
+        int yPosRightStart = rand;
         
         
         CreateRoadLayout(xPosStart, xPosExit);
+        ConnectSideRoad(yPosLeftStart, yPosRightStart);
     }
-    
+
+    private void ConnectSideRoad(int yPosLeft, int yPosRight)
+    {
+        int xPosLeft = 1;
+        int xPosRigth = 5;
+        while (IsFieldEmpty(xPosLeft+1,yPosLeft))
+        {
+            fieldsArray[xPosLeft + 1][yPosLeft] = 1;
+            xPosLeft++;
+        }
+        while (IsFieldEmpty(xPosRigth-1,yPosRight))
+        {
+            fieldsArray[xPosRigth - 1][yPosRight] = 1;
+            xPosRigth--;
+        }
+    }
+
     private void CreateRoadLayout(int xPosStart, int xPosExit)
     {
         bool isNextBlockExit = false;
@@ -185,6 +197,8 @@ public class MapGenHandler : MonoBehaviour
                 isNextBlockExit = true;
             }
         } while (!isNextBlockExit);
+        
+        
     }
 
     private bool IsFieldEmpty(int xPos, int zPos)
@@ -213,19 +227,21 @@ public class MapGenHandler : MonoBehaviour
     
     private void AssigneFieldType()
     {
-        /*
-        foreach (FieldPos field in fieldsPos)
-        {
-            field.Type = (FieldPos.FieldType)(fieldsArray[field.ArrayPosX][field.ArrayPosZ]);
-            Debug.Log(field.Type.ToString());
-        }
-        */
         for (int i = 0; i < 49; i++)
         {
             fieldsPos[i].Type = (FieldPos.FieldType)(fieldsArray[fieldsPos[i].ArrayPosX][fieldsPos[i].ArrayPosZ]);
             Debug.Log(i + "\nType " + fieldsPos[i].Type + "\nPosX " +  fieldsPos[i].ArrayPosX + "\nPosY" + fieldsPos[i].ArrayPosZ + "\nUebergebene Enum Index" + fieldsArray[fieldsPos[i].ArrayPosX][fieldsPos[i].ArrayPosZ]);
         }
     }
-    
-    
+
+    private void LoadPrefabs()
+    {
+        for (int i = 0; i < fieldsPosObj.Length; i++)
+        {
+
+            var field = Instantiate(fieldPF, fieldsPosObj[i].transform.position, Quaternion.identity);
+            field.GetComponent<OutsideVegLoader>().LoadFieldType(fieldsPosObj[i].GetComponent<FieldPos>().Type);
+            Destroy(fieldsPosObj[i]);
+        }
+    }
 }

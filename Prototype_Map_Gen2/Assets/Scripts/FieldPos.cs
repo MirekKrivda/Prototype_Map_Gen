@@ -31,7 +31,6 @@ public class FieldPos : MonoBehaviour
     public int ArrayPosX { get; set; } 
     public int ArrayPosZ { get; set; }
     
-    // Start is called before the first frame update
     void Start()
     {
         if ((int)transform.position.x - 5 != 0)
@@ -50,11 +49,5 @@ public class FieldPos : MonoBehaviour
         {
             ArrayPosZ = 0;
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }
